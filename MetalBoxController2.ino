@@ -11,6 +11,7 @@
 #define RELAY_OFF 1 // GPIO value to write to turn off attached relay
 
 
+
 /******************************************************************************************************/
 /*                               				Сенсоры												  */
 /******************************************************************************************************/
@@ -65,6 +66,8 @@
 /******************************************************************************************************/
 
 #define COUNT 50
+#define RADIO_RESET_DELAY_TIME 20 //Задержка между сообщениями
+#define MESSAGE_ACK_RETRY_COUNT 5  //количество попыток отсылки сообщения с запросом подтверждения
 
 boolean metric = true;          // Celcius
 
@@ -82,6 +85,8 @@ boolean boolRelayDiffCheckDisabled = false;
 boolean boolCaseDiffCheckDisabled = false;
 boolean boolRecheckSensorValues = false;
 
+boolean gotAck=false; //подтверждение от гейта о получении сообщения 
+int iCount = MESSAGE_ACK_RETRY_COUNT;
 
 /******************************************************************************************************/
 /*                               				Variables		   								      */
@@ -270,7 +275,12 @@ if (boolRecheckSensorValues)
 
 
 void incomingMessage(const MyMessage &message) {
-  // We only expect one type of message from controller. But we better check anyway.
+
+  if (message.isAck())
+  {
+    gotAck = true;
+    return;
+  }
 
     if ( message.sensor == REBOOT_CHILD_ID && message.getBool() == true ) {
              wdt_enable(WDTO_30MS);
@@ -361,7 +371,19 @@ int invertedValue;
           if (lightLevel != lastRelayStatusLightLevel1) {
            Serial.print("Relay 1 power Lightlevel: ");
             Serial.println(lightLevel);
-            gw.send(Relay2StatusLightMsg.set(lightLevel));
+
+      //Отсылаем состояние сенсора с подтверждением получения
+     iCount = MESSAGE_ACK_RETRY_COUNT;
+
+       while( !gotAck && iCount > 0 )
+        {
+         gw.send(Relay2StatusLightMsg.set(lightLevel), true);   // Send motion value to gw
+         gw.wait(RADIO_RESET_DELAY_TIME);
+          iCount--;
+       }
+
+       gotAck = false;
+
             
               
             lastRelayStatusLightLevel1 = lightLevel;
@@ -382,7 +404,19 @@ int invertedValue;
           if (lightLevel != lastRelayStatusLightLevel2) {
            Serial.print("Relay 2 status Lightlevel: ");
             Serial.println(lightLevel);
-            gw.send(Relay1StatusLightMsg.set(lightLevel));
+
+      //Отсылаем состояние сенсора с подтверждением получения
+     iCount = MESSAGE_ACK_RETRY_COUNT;
+
+       while( !gotAck && iCount > 0 )
+        {
+         gw.send(Relay1StatusLightMsg.set(lightLevel), true);   // Send motion value to gw
+         gw.wait(RADIO_RESET_DELAY_TIME);
+          iCount--;
+       }
+
+       gotAck = false;
+
             
               
             lastRelayStatusLightLevel2 = lightLevel;
@@ -434,7 +468,20 @@ void checkTemp()
         {
           //Disconnect 220v input
           digitalWrite(RELAY1_PIN, RELAY_ON);
-          gw.send(CriticalAlarmMsg.set("1"),true);
+
+      //Отсылаем состояние сенсора с подтверждением получения
+     iCount = MESSAGE_ACK_RETRY_COUNT;
+
+       while( !gotAck && iCount > 0 )
+        {
+         gw.send(CriticalAlarmMsg.set("1"),true);   // Send motion value to gw
+         gw.wait(RADIO_RESET_DELAY_TIME);
+          iCount--;
+       }
+
+       gotAck = false;
+
+          
           
         }
 
@@ -454,7 +501,19 @@ void checkTemp()
         {
           //Disconnect 220v input
           digitalWrite(RELAY2_PIN, RELAY_ON);
-          gw.send(CriticalAlarmMsg.set("1"),true);
+
+      //Отсылаем состояние сенсора с подтверждением получения
+     iCount = MESSAGE_ACK_RETRY_COUNT;
+
+       while( !gotAck && iCount > 0 )
+        {
+         gw.send(CriticalAlarmMsg.set("1"),true);   // Send motion value to gw
+         gw.wait(RADIO_RESET_DELAY_TIME);
+          iCount--;
+       }
+
+       gotAck = false;
+ 
           
         }
 
@@ -474,7 +533,20 @@ void checkTemp()
         {
           //Disconnect 220v input
           digitalWrite(RELAY1_PIN, RELAY_ON);
-          gw.send(CriticalAlarmMsg.set("1"),true);
+
+      //Отсылаем состояние сенсора с подтверждением получения
+     iCount = MESSAGE_ACK_RETRY_COUNT;
+
+       while( !gotAck && iCount > 0 )
+        {
+         gw.send(CriticalAlarmMsg.set("1"),true);   // Send motion value to gw
+         gw.wait(RADIO_RESET_DELAY_TIME);
+          iCount--;
+       }
+
+       gotAck = false;
+
+          
           
         }
 
@@ -646,8 +718,32 @@ void reportTempDiffCheckState()
         previousTDCMillis = currentTDCMillis;
         // take action here:
 
-       gw.send(RelayTempDiffCheckStateMsg.set(boolRelayDiffCheckDisabled ? "1" : "0" ));  
-       gw.send(CaseTempDiffCheckStateMsg.set(boolCaseDiffCheckDisabled ? "1" : "0" ));         
+      //Отсылаем состояние сенсора с подтверждением получения
+     iCount = MESSAGE_ACK_RETRY_COUNT;
+
+       while( !gotAck && iCount > 0 )
+        {
+         gw.send(RelayTempDiffCheckStateMsg.set(boolRelayDiffCheckDisabled ? "1" : "0" ), true);    // Send motion value to gw
+         gw.wait(RADIO_RESET_DELAY_TIME);
+          iCount--;
+       }
+
+       gotAck = false;
+
+
+      //Отсылаем состояние сенсора с подтверждением получения
+     iCount = MESSAGE_ACK_RETRY_COUNT;
+
+       while( !gotAck && iCount > 0 )
+        {
+         gw.send(CaseTempDiffCheckStateMsg.set(boolCaseDiffCheckDisabled ? "1" : "0" ), true);     // Send motion value to gw
+         gw.wait(RADIO_RESET_DELAY_TIME);
+          iCount--;
+       }
+
+       gotAck = false;
+        
+       
     }    
 
 
