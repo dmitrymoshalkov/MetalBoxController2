@@ -162,8 +162,8 @@ MyMessage CaseTempDiffCheckStateMsg(DISABLE_CASETEMPDIFF_CHECK_CHILD_ID, V_TRIPP
 
 void setup() {
 
-    Serial.begin(115200);
-    Serial.println("Begin setup");
+    //Serial.begin(115200);
+    //Serial.println("Begin setup");
 
     // Initialize library and add callback for incoming messages
     gw.begin(incomingMessage, NODE_ID, false);
@@ -236,7 +236,7 @@ void setup() {
 
     gw.send(CriticalAlarmMsg.set("0"),true);
 
-    Serial.println("End setup");  
+    //Serial.println("End setup");  
 
 
 } // end setup
@@ -369,8 +369,8 @@ int invertedValue;
       {    
 
           if (lightLevel != lastRelayStatusLightLevel1) {
-           Serial.print("Relay 1 power Lightlevel: ");
-            Serial.println(lightLevel);
+           //Serial.print("Relay 1 power Lightlevel: ");
+            //Serial.println(lightLevel);
 
       //Отсылаем состояние сенсора с подтверждением получения
      iCount = MESSAGE_ACK_RETRY_COUNT;
@@ -402,8 +402,8 @@ int invertedValue;
       {    
 
           if (lightLevel != lastRelayStatusLightLevel2) {
-           Serial.print("Relay 2 status Lightlevel: ");
-            Serial.println(lightLevel);
+           //Serial.print("Relay 2 status Lightlevel: ");
+            //Serial.println(lightLevel);
 
       //Отсылаем состояние сенсора с подтверждением получения
      iCount = MESSAGE_ACK_RETRY_COUNT;
@@ -453,8 +453,8 @@ void checkTemp()
 
         relay1Temp = static_cast<float>(static_cast<int> (sensors.getTempCByIndex(0) * 10.)) / 10.; // Temp sensor relay
 
-        Serial.print("Relay1Temp: ");
-        Serial.println(relay1Temp);
+        //Serial.print("Relay1Temp: ");
+        //Serial.println(relay1Temp);
         if ( ( relay1Temp != lastrelay1Temp || boolRecheckSensorValues ) && relay1Temp != -127.00 && relay1Temp != 85.00 ) {
             gw.send(Relay1TempMsg.set(relay1Temp,1));
             lastrelay1Temp = relay1Temp;
@@ -488,8 +488,8 @@ void checkTemp()
 
         relay2Temp = static_cast<float>(static_cast<int> (sensors.getTempCByIndex(4) * 10.)) / 10.; // Temp sensor relay
 
-        Serial.print("Relay2Temp: ");
-        Serial.println(relay2Temp);
+        //Serial.print("Relay2Temp: ");
+        //Serial.println(relay2Temp);
         if ((relay2Temp != lastrelay2Temp || boolRecheckSensorValues) && relay2Temp != -127.00 && relay2Temp != 85.00 ) {
             gw.send(Relay2TempMsg.set(relay2Temp,1));
             lastrelay2Temp = relay2Temp;
@@ -520,8 +520,8 @@ void checkTemp()
 
         TopCaseTemp = static_cast<float>(static_cast<int> (sensors.getTempCByIndex(1) * 10.)) / 10.; // Temp sensor relay
 
-        Serial.print("Top Case Temp: ");
-        Serial.println(TopCaseTemp);
+        //Serial.print("Top Case Temp: ");
+        //Serial.println(TopCaseTemp);
         if ((TopCaseTemp != lastTopCaseTemp || boolRecheckSensorValues ) && TopCaseTemp != -127.00 && TopCaseTemp != 85.00 ) {
             gw.send(OutBoxTempMsg.set(TopCaseTemp,1));
             lastTopCaseTemp = TopCaseTemp;
@@ -552,8 +552,8 @@ void checkTemp()
 
         InCaseTemp = static_cast<float>(static_cast<int> (sensors.getTempCByIndex(2) * 10.)) / 10.; // Temp sensor relay
 
-        Serial.print("Inner Case Temp: ");
-        Serial.println(InCaseTemp);
+        //Serial.print("Inner Case Temp: ");
+        //Serial.println(InCaseTemp);
         if ((InCaseTemp != lastInCaseTemp || boolRecheckSensorValues) && InCaseTemp != -127.00 && InCaseTemp != 85.00 ) {
             gw.send(InboxTempMsg.set(InCaseTemp,1));
             lastInCaseTemp = InCaseTemp;
@@ -562,8 +562,8 @@ void checkTemp()
 
         EnvTemp = static_cast<float>(static_cast<int> (sensors.getTempCByIndex(3) * 10.)) / 10.; // Temp sensor relay
 
-        Serial.print("Environment Temp: ");
-        Serial.println(EnvTemp);
+        //Serial.print("Environment Temp: ");
+        //Serial.println(EnvTemp);
         if ((EnvTemp != lastEnvTemp || boolRecheckSensorValues) && EnvTemp != -127.00 && EnvTemp != 85.00 ) {
             gw.send(EnvTempMsg.set(EnvTemp,1));
             lastEnvTemp = EnvTemp;
@@ -613,9 +613,9 @@ int value = 0;
      // Send in the new value
      gw.send(Voltmeter5vMsg.set(v2,2));   
      oldValue_voltmeter5v = v2;  
-         Serial.print("Voltage 5v: ");
-         Serial.print(v2);  
-         Serial.println(" V");          
+         //Serial.print("Voltage 5v: ");
+         //Serial.print(v2);  
+         //Serial.println(" V");          
   }
 
 
@@ -641,9 +641,9 @@ Vcc = -1;
      // Send in the new value
      gw.send(Voltmeter10vMsg.set(v2,2));   
      oldValue_voltmeter10v = v2;  
-         Serial.print("Voltage 10v: ");
-         Serial.print(v2);  
-         Serial.println(" V");          
+         //Serial.print("Voltage 10v: ");
+         //Serial.print(v2);  
+         //Serial.println(" V");          
   }
 
 
@@ -668,9 +668,9 @@ Vcc = -1;
      // Send in the new value
      gw.send(Voltmeter24vMsg.set(v2,2));   
      oldValue_voltmeter24v = v2;  
-         Serial.print("Voltage 24v: ");
-         Serial.print(v2);  
-         Serial.println(" V");          
+         //Serial.print("Voltage 24v: ");
+         //Serial.print(v2);  
+         //Serial.println(" V");          
   }
 
 
@@ -695,9 +695,9 @@ Vcc = -1;
      // Send in the new value
      gw.send(Voltmeter48vMsg.set(v2,2));   
      oldValue_voltmeter48v = v2;  
-         Serial.print("Voltage 48v: ");
-         Serial.print(v2);  
-         Serial.println(" V");          
+         //Serial.print("Voltage 48v: ");
+         //Serial.print(v2);  
+         //Serial.println(" V");          
   }
 
 
@@ -788,7 +788,7 @@ float readVcc() {
 
 
 int determineVQ(int PIN) {
-Serial.print("estimating avg. quiscent voltage:");
+//Serial.print("estimating avg. quiscent voltage:");
 long VQ = 0;
 //read 5000 samples to stabilise value
 for (int i=0; i<5000; i++) {
@@ -796,8 +796,8 @@ for (int i=0; i<5000; i++) {
     delay(1);//depends on sampling (on filter capacitor), can be 1/80000 (80kHz) max.
 }
 VQ /= 5000;
-Serial.print(map(VQ, 0, 1023, 0, 5000)); //5000
-Serial.println(" mV");
+//Serial.print(map(VQ, 0, 1023, 0, 5000)); //5000
+//Serial.println(" mV");
 return int(VQ);
 }
 
